@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import routes from "../app/index.js";
 import databaseConnect from "../db/db.js";
 
 dotenv.config();
@@ -13,9 +14,7 @@ app.use(express.json());
     await databaseConnect();
 })();
 
-app.get("/", (req, res) => {
-    res.send("API is running and DB is connected!");
-});
+app.use('/', routes);
 
 app.listen(PORT, () => {
     console.log(`App is listening on port ${PORT}`);
