@@ -3,7 +3,7 @@ import Task from "../../db/models/taskModel.js";
 
 const task = express.Router();
 
-task.post('/tasks', async (req, res) => {
+task.post('/create', async (req, res) => {
     try {
         const { title, description, status } = req.body;
 
@@ -22,7 +22,21 @@ task.post('/tasks', async (req, res) => {
     }
     catch (err) {
         res.status(500).json({
-            message: "Error", err
+            message: "Error",
+            error: err.message
+        });
+    }
+});
+
+task.get('/show', async (req, res) => {
+    try {
+        const tasks = await Task.find();
+        res.status(200).json(tasks);
+    }
+    catch (err) {
+        res.status(500).json({
+            message: "Error",
+            error: err.message
         });
     }
 });
