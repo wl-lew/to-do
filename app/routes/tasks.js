@@ -29,7 +29,11 @@ task.post('/create', async (req, res) => {
 
 task.get('/show-all', async (req, res) => {
     try {
-        const tasks = await Task.find();
+        const { status } = req.query;
+
+        const filter = status ? { status } : {};
+
+        const tasks = await Task.find(filter);
         res.status(200).json(tasks);
     }
     catch (err) {
