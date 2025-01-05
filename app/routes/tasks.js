@@ -84,4 +84,26 @@ task.put('/update/:id', async (req, res) => {
     }
 });
 
+task.delete('/delete/:id', async (req, res) => {
+    try {
+        const deleteTask = await Task.findByIdAndDelete(req.params.id);
+
+        if(!deleteTask) {
+            return res.status(404).json({
+                message: "Task not found!"
+            });
+        }
+
+        res.status(200).json({
+            message: "Task deleted successfully!",
+            task: deleteTask
+        });
+    }
+    catch (err) {
+        res.status(500).json({
+            message: "Error delete task!"
+        });
+    }
+});
+
 export default task;
