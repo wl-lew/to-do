@@ -106,4 +106,21 @@ task.delete('/delete/:id', async (req, res) => {
     }
 });
 
+task.delete('/delete-all', async (req, res) => {
+    try {
+        const result = await Task.deleteMany({});
+
+        // noinspection JSUnresolvedVariable
+        res.status(200).json({
+            message: "All tasks have been deleted!",
+            deletedCount: result.deletedCount
+        });
+    }
+    catch (err) {
+        res.status(500).json({
+            message: "Error with deleting all tasks!"
+        });
+    }
+});
+
 export default task;
