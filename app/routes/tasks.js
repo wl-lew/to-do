@@ -57,4 +57,31 @@ task.get('/show/:id', async (req, res) => {
     }
 });
 
+task.put('/update/:id', async (req, res) => {
+    try {
+        const { title, description, status } = req.body;
+
+        const updateTask = await Task.findByIdAndUpdate(
+            req.params.id,
+            { title, description, status },
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        if (!updateTask) {
+            return res.status(404).json({
+                message: "Task not found!"
+            });
+        }
+        res.status(200).json(updateTask);
+    }
+    catch (err) {
+        res.status(500).json({
+            message: "Error with update!"
+        });
+    }
+});
+
 export default task;
