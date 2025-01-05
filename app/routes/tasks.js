@@ -1,5 +1,6 @@
 import express from "express";
 import Task from "../../db/models/taskModel.js";
+import { paginationValidator } from "../helpers/tasksValidation.js";
 
 const task = express.Router();
 
@@ -29,12 +30,24 @@ task.post('/create', async (req, res) => {
 
 task.get('/show-all', async (req, res) => {
     try {
+        const { page, limit } = paginationValidator(req, res);
         const { status } = req.query;
 
         const filter = status ? { status } : {};
 
-        const tasks = await Task.find(filter);
-        res.status(200).json(tasks);
+        const tasks = await Task.find(filter)
+            .skip((page -1) * limit)
+            .limit(Number(limit))
+            .lean();
+
+        const totalTasks = await Task.countDocuments(filter);
+
+        res.status(200).json({
+            totalTasks,
+            currentPage: Number(page),
+            totalPages: Math.ceil(totalTasks/limit),
+            tasks
+        });
     }
     catch (err) {
         res.status(500).json({
